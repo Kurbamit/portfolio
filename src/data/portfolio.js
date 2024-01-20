@@ -1,20 +1,21 @@
-export default [
+export default 
+[
     {
-         title: "Project 1",
-         imgUrl: "./assets/terminal-website.jpg",
-         stack: ["HTML", "CSS", "JavaScript"],
-         link: "https://www.linkedin.com/in/dominykas-cernovas/"
+        title: "Flashcards",
+        imgUrl: "./assets/flashcards.jpg",
+        stack: ["C#", "ASP.NET", "MVC", "MS SQL"],
+        link: "https://github.com/jurisbogd/PSI2023SemesterProject"
     },
     {
         title: "Developer Portfolio",
-        imgUrl: "./assets/terminal-website.jpg",
+        imgUrl: "./assets/react-vite.webp",
         stack: ["React", "Tailwind", "Vite "],
-        link: "https://www.linkedin.com/in/dominykas-cernovas/"
+        link: "https://github.com/Kurbamit/portfolio"
    },
    {
-    title: "Project 3 ",
-    imgUrl: "./assets/terminal-website.jpg",
-    stack: ["HTML", "CSS", "JavaScript"],
-    link: "https://www.linkedin.com/in/dominykas-cernovas/"
-}
+        title: "Car rental system",
+        imgUrl: "./assets/dbms.jpg",
+        stack: ["PostgreSQL", "Java"],
+        link: "https://github.com/Kurbamit/Car-rental-DB"
+    }
 ]
