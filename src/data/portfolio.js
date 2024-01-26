@@ -3,7 +3,7 @@ export default
     {
         title: "Flashcards",
         imgUrl: "./assets/flashcards.jpg",
-        stack: ["C#", "ASP.NET", "MVC", "MS SQL"],
+        stack: ["C#", "ASP.NET", "MVC", "MS SQL", "Entity Framework"],
         link: "https://github.com/jurisbogd/PSI2023SemesterProject"
     },
     {
@@ -15,7 +15,7 @@ export default
    {
         title: "Car rental system",
         imgUrl: "./assets/dbms.jpg",
-        stack: ["PostgreSQL", "Java"],
+        stack: ["PostgreSQL", "Java", "JDBC"],
         link: "https://github.com/Kurbamit/Car-rental-DB"
     }
 ]
