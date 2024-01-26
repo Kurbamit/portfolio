@@ -1,8 +1,6 @@
-# React + Vite
+# React + Vite + Tailwind portfolio project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a portfolio project built with React, Vite and Tailwind.
+It is a simple portfolio project that shows a list of projects, timeline and a contact form.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+You can see the live demo [here](https://kurbamit.github.io/portfolio).
