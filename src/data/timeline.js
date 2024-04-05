@@ -1,9 +1,15 @@
 export default [
     {
+        year: "2024",
+        title: "Junior software developer",
+        duration: "2024-present",
+        details: "I am currently working at a company called UAB 'Novian PRO' as a junior software developer."
+    },
+    {
         year: "2023",
         title: "Sales director's assistant",
-        duration: "2023-Present",
-        details: "I am currently working at a company called 'UADBB Rizikos valdymo specialistai' as a sales director's assistant. I am responsible for preparation of various documents and insurance offers."
+        duration: "2023-2024",
+        details: "I was working at a company called UADBB 'Rizikos valdymo specialistai' as a sales director's assistant. I was responsible for preparation, administration and termination of various documents and insurance offers."
     },
     {
         year: "2022",
