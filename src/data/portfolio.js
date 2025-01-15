@@ -1,10 +1,10 @@
 export default 
 [
     {
-        title: "Flashcards",
-        imgUrl: "./assets/flashcards.jpg",
-        stack: ["C#", "ASP.NET", "MVC", "MS SQL", "Entity Framework"],
-        link: "https://github.com/jurisbogd/PSI2023SemesterProject"
+        title: "Point of Sale",
+        imgUrl: "./assets/pos.png",
+        stack: ["ASP.NET", "React", "PostgreSql", "Entity Framework"],
+        link: "https://github.com/Kurbamit/PSP2"
     },
     {
         title: "Developer Portfolio",
@@ -12,10 +12,10 @@ export default
         stack: ["React", "Tailwind", "Vite "],
         link: "https://github.com/Kurbamit/portfolio"
    },
-   {
-        title: "Car rental system",
-        imgUrl: "./assets/dbms.jpg",
-        stack: ["PostgreSQL", "Java", "JDBC"],
-        link: "https://github.com/Kurbamit/Car-rental-DB"
+    {
+        title: "Flashcards",
+        imgUrl: "./assets/flashcards.jpg",
+        stack: ["C#", "ASP.NET", "MVC", "MS SQL", "Entity Framework"],
+        link: "https://github.com/jurisbogd/PSI2023SemesterProject"
     }
 ]
