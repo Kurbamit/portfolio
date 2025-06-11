@@ -1,9 +1,15 @@
 export default [
     {
+        year: "2025",
+        title: "Junior software developer @ Adform",
+        duration: "2025-Present",
+        details: "I am currently working at Adform as a junior software developer."
+    },
+    {
         year: "2024",
-        title: "Junior software developer",
-        duration: "2024-present",
-        details: "I am currently working at a company called UAB 'Novian PRO' as a junior software developer."
+        title: "Junior software developer @ UAB 'Novian PRO'",
+        duration: "2024-2025",
+        details: "I started working at UAB 'Novian PRO' as a junior software developer. Technologies I used include ASP.NET, C#, Microsoft SQL Server and KnockoutJS."
     },
     {
         year: "2023",
