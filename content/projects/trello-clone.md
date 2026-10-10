@@ -1,10 +1,9 @@
 ---
 title: Trello Clone
 repo: https://github.com/PovilasPliuskus/PSK
-stack: [ASP.NET, React, PostgreSQL, Keycloak]
-year: 2024
+stack: [C#, ASP.NET Core, PostgreSQL, EF Core, Keycloak, React, TypeScript, Docker]
+year: 2025
 status: archived
 image: kanban-board.jpg
-# TODO(you): check year and description
 ---
-A team kanban board with boards, cards and Keycloak-based authentication, built as a university group project.
+A Trello-style task manager with workspaces, a drag-and-drop task board, subtasks and comments. A layered ASP.NET Core API (separate business logic, contracts and data access projects) on EF Core and PostgreSQL, with Keycloak handling sign-in in Docker and a React 19 and TypeScript client. Built by a team of five as a Vilnius University group project.

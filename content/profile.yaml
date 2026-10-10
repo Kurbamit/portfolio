@@ -15,7 +15,7 @@ tagline: I design .NET services, data models and LLM-powered features that are b
 
 # About section paragraph.
 bio: >- # TODO(you)
-  I work mostly in C# and ASP.NET Core, with PostgreSQL and SQL Server underneath.
+  I work mostly in C# and ASP.NET Core, with MongoDB and SQL Server underneath.
   Most of my side work now is about putting language models to practical use:
   tool-calling agents, retrieval over real data, and the evaluation it takes to trust them.
 
@@ -28,11 +28,17 @@ focus: # TODO(you)
 links:
   github: https://github.com/Kurbamit
   linkedin: https://www.linkedin.com/in/dominykas-cernovas/
-  email: # optional, e.g. you@example.com. Leave empty to hide.
+  email: dominykas.cernovas@pm.me
 
 # 'stack' command. Group name -> list. Order is kept.
 skills: # TODO(you)
   backend: [C#, ASP.NET Core, Entity Framework Core, REST APIs, Keycloak]
-  data: [PostgreSQL, Microsoft SQL Server, Redis]
-  ai: [Claude and OpenAI APIs, Tool calling and agents, RAG and embeddings, LLM evals]
-  tooling: [Docker, GitHub Actions, Linux, React]
+  data: [PostgreSQL, Microsoft SQL Server, MongoDB]
+  ai:
+    [
+      Claude and OpenAI APIs,
+      Tool calling and agents,
+      RAG and embeddings,
+      LLM evals,
+    ]
+  tooling: [Docker, GitHub Actions, Kubernetes, RabbitMQ, Kafka]

@@ -126,11 +126,14 @@ export function itemsFor(view, ctx) {
     case "intro":
       return SECTIONS.map((s) => ({ label: s, hint: SECTION_HINTS[s], command: s }));
     case "projects":
-      return ctx.projects.map((p) => ({
-        label: p.title,
-        hint: p.stack ? `${p.year}  ${p.stack.join(" / ")}` : undefined,
-        command: `open ${p.slug}`,
-      }));
+      return [
+        ...ctx.projects.map((p) => ({
+          label: p.title,
+          hint: p.stack ? `${p.year}  ${p.stack.join(" / ")}` : undefined,
+          command: `open ${p.slug}`,
+        })),
+        menu,
+      ];
     case "project": {
       const p = ctx.projects.find((x) => x.slug === view.slug);
       if (!p) return [menu];

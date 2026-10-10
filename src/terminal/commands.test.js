@@ -120,6 +120,15 @@ describe("itemsFor / pathFor / complete", () => {
     ]);
   });
 
+  it("project list ends with a way back to the menu", () => {
+    expect(itemsFor({ type: "projects" }, ctx()).map((i) => i.command)).toEqual([
+      "open point-of-sale",
+      "open portfolio",
+      "open trello-clone",
+      "menu",
+    ]);
+  });
+
   it("project options include demo only when present", () => {
     const cmds = (slug) => itemsFor({ type: "project", slug }, ctx()).map((i) => i.command);
     expect(cmds("portfolio")).toEqual(["repo portfolio", "demo portfolio", "back"]);
