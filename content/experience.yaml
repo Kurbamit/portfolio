@@ -1,0 +1,32 @@
+# Newest first. kind: work | education | milestone.
+# period, title and kind are required; org, summary and tags are optional.
+
+- period: 2025 - now
+  title: Software engineer # TODO(you)
+  org: Adform
+  kind: work
+  summary: Building backend services for Adform's advertising platform. # TODO(you)
+  tags: [C#, .NET]
+
+- period: 2024 - 2025
+  title: Junior software developer
+  org: UAB Novian PRO
+  kind: work
+  summary: Built and maintained business applications end to end.
+  tags: [ASP.NET, C#, SQL Server, KnockoutJS]
+
+- period: 2023 - 2024
+  title: Sales director's assistant
+  org: UADBB Rizikos valdymo specialistai
+  kind: work
+  summary: Prepared and administered insurance offers and contracts.
+
+- period: 2022 - now
+  title: BSc Software Engineering # TODO(you): update status / graduation year
+  org: Vilnius University
+  kind: education
+
+- period: "2018"
+  title: First line of code
+  kind: milestone
+  summary: A C++ hello world, then a calculator. That is where it started.
