@@ -66,8 +66,8 @@ Project names resolve by list number, exact slug, slug prefix, or a substring of
 - `light`: dark green on off-white.
 
 The dark themes get a soft text glow and faint static scanlines (no flicker). The theme
-is stored in `localStorage.theme` and set in `index.html` before first paint; old stored
-values `dark` and `light` map to `green` and `light`.
+is stored in `sessionStorage.theme` (so every new visit opens in green) and set in
+`index.html` before first paint.
 
 ## Architecture
 

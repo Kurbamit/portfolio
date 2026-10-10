@@ -17,7 +17,7 @@ export function useTheme() {
       getComputedStyle(document.documentElement).getPropertyValue("--bg").trim()
     );
     try {
-      localStorage.setItem("theme", next);
+      sessionStorage.setItem("theme", next);
     } catch {
       // Storage unavailable (private mode); the theme still applies for this visit.
     }
