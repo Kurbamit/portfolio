@@ -3,11 +3,11 @@
 # period, title and kind are required; org, summary and tags are optional.
 
 - period: 2025 - now
-  title: Software engineer # TODO(you)
+  title: Software engineer
   org: Adform
   kind: work
-  summary: Building backend services for Adform's advertising platform. # TODO(you)
-  tags: [C#, .NET]
+  summary: Developed and maintained microservices for Adform's advertising platform. Worked with C#, .NET, MongoDB, RabbitMQ, Kafka, Docker, and Kubernetes to build scalable and reliable systems.
+  tags: [C#, .NET, MongoDB, RabbitMQ, Kafka, Microservices, Docker, Kubernetes]
 
 - period: 2024 - 2025
   title: Junior software developer
@@ -15,12 +15,6 @@
   kind: work
   summary: Built and maintained business applications end to end.
   tags: [ASP.NET, C#, SQL Server, KnockoutJS]
-
-- period: 2023 - 2024
-  title: Sales director's assistant
-  org: UADBB Rizikos valdymo specialistai
-  kind: work
-  summary: Prepared and administered insurance offers and contracts.
 
 - period: 2026 - 2028
   title: MSc Artificial Intelligence Engineering
