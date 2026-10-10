@@ -78,9 +78,7 @@ export function validateProfile(data) {
   if (data == null || typeof data !== "object") fail(f, "must be a YAML mapping");
   const links = data.links ?? {};
   const skills = data.skills ?? {};
-  const trace = data.trace ?? [];
   if (typeof skills !== "object" || Array.isArray(skills)) fail(f, `"skills" must map group names to lists`);
-  if (!Array.isArray(trace)) fail(f, `"trace" must be a list`);
 
   const name = text(f, data.name, "name", { required: true });
   return {
@@ -103,16 +101,6 @@ export function validateProfile(data) {
       group,
       items: list(f, items, `skills.${group}`, { required: true }),
     })),
-    trace: trace.map((hop, i) => {
-      if (typeof hop?.ms !== "number" || !(hop.ms > 0)) {
-        fail(f, `"trace[${i}].ms" must be a positive number`);
-      }
-      return {
-        name: text(f, hop.name, `trace[${i}].name`, { required: true }),
-        ms: hop.ms,
-        note: text(f, hop.note, `trace[${i}].note`),
-      };
-    }),
   };
 }
 

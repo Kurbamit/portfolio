@@ -9,7 +9,7 @@ All content lives in `content/`. Nothing in `src/` needs to change.
 
 | What | Where |
 | --- | --- |
-| Name, headline, bio, links, skills, hero trace | `content/profile.yaml` |
+| Name, headline, bio, links, skills | `content/profile.yaml` |
 | Jobs, education, milestones | `content/experience.yaml` (newest first) |
 | Projects | `content/projects/<slug>.md`, one file per project |
 | Project screenshots | `public/assets/` |
@@ -47,4 +47,12 @@ npm run build
 npm run deploy   # build and publish to GitHub Pages
 ```
 
-Press ⌘K / Ctrl+K on the site for the command palette.
+## Using the site
+
+The page is a terminal. Use the arrow keys (or `j` / `k`), Enter, number keys and Esc,
+tap options on mobile, or type commands at the prompt:
+
+`help`, `about`, `projects`, `open <n|name>`, `repo`, `demo`, `experience`, `stack`,
+`contact`, `theme [green|amber|light]`, `back`, `clear`.
+
+The theme button in the title bar cycles green, amber and light.

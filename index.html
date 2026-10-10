@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="green">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,18 +8,26 @@
       name="description"
       content="Backend software engineer in Vilnius building .NET services and practical AI features."
     />
-    <meta name="theme-color" content="#0d0f0d" />
+    <meta name="theme-color" content="#0a0d0a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script>
       try {
         var t = localStorage.getItem("theme");
-        if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        if (t === "dark") t = "green";
+        if (["green", "amber", "light"].indexOf(t) === -1) t = "green";
         document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="font-family: monospace; padding: 2rem">
+        Dominykas Černovas, backend software engineer.
+        <a href="https://github.com/Kurbamit">GitHub</a> /
+        <a href="https://www.linkedin.com/in/dominykas-cernovas/">LinkedIn</a>
+      </p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

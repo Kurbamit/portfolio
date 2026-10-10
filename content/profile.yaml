@@ -7,10 +7,10 @@ role: Backend software engineer
 location: Vilnius, Lithuania
 currently: Software engineer at Adform # TODO(you): confirm title
 
-# Hero. Two short lines; they are set very large.
+# Intro shown by 'whoami'. Two short lines.
 headline: Backends that stay up.
 headlineAccent: AI that earns its place.
-# Hero sub-line, max ~20 words.
+# One-line pitch under the headline, max ~20 words.
 tagline: I design .NET services, data models and LLM-powered features that are boring to operate. # TODO(you)
 
 # About section paragraph.
@@ -19,7 +19,7 @@ bio: >- # TODO(you)
   Most of my side work now is about putting language models to practical use:
   tool-calling agents, retrieval over real data, and the evaluation it takes to trust them.
 
-# Shown in the hero's response body and the About section.
+# Shown in the about section.
 focus: # TODO(you)
   - backend services
   - LLM tooling and agents
@@ -30,16 +30,9 @@ links:
   linkedin: https://www.linkedin.com/in/dominykas-cernovas/
   email: # optional, e.g. you@example.com. Leave empty to hide.
 
-# Stack section. Group name -> list. Order is kept. Four groups fit the grid best.
+# 'stack' command. Group name -> list. Order is kept.
 skills: # TODO(you)
   backend: [C#, ASP.NET Core, Entity Framework Core, REST APIs, Keycloak]
   data: [PostgreSQL, Microsoft SQL Server, Redis]
   ai: [Claude and OpenAI APIs, Tool calling and agents, RAG and embeddings, LLM evals]
   tooling: [Docker, GitHub Actions, Linux, React]
-
-# Hero request trace. Illustrative latencies in ms (labeled "sample trace" on the page).
-trace:
-  - { name: gateway, ms: 3, note: ASP.NET Core }
-  - { name: llm, ms: 28, note: tool call }
-  - { name: postgres, ms: 6, note: query }
-  - { name: cache, ms: 1, note: write }

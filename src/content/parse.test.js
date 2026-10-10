@@ -90,7 +90,6 @@ describe("validateProfile", () => {
     const p = validateProfile(base);
     expect(p.handle).toBe("D");
     expect(p.skills).toEqual([]);
-    expect(p.trace).toEqual([]);
     expect(p.links).toEqual({ github: "https://github.com/d", linkedin: null, email: null });
   });
 
@@ -102,9 +101,6 @@ describe("validateProfile", () => {
     ]);
   });
 
-  it("rejects non-positive trace latency", () => {
-    expect(() => validateProfile({ ...base, trace: [{ name: "api", ms: 0 }] })).toThrow(/trace\[0\]\.ms/);
-  });
 
   it("requires links.github", () => {
     expect(() => validateProfile({ ...base, links: {} })).toThrow(/content\/profile\.yaml: "links\.github"/);
