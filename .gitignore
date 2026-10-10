@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Locally installed AI agent skills
+.agents/
+.claude/
+skills-lock.json
