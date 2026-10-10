@@ -23,6 +23,8 @@ describe("run: navigation", () => {
     ["ls -la", "projects"],
     ["cd projects", "projects"],
     ["experience", "experience"],
+    ["education", "education"],
+    ["cd education", "education"],
     ["stack", "stack"],
     ["contact", "contact"],
     ["help", "help"],
@@ -112,6 +114,7 @@ describe("itemsFor / pathFor / complete", () => {
       "about",
       "projects",
       "experience",
+      "education",
       "stack",
       "contact",
     ]);
@@ -127,6 +130,12 @@ describe("itemsFor / pathFor / complete", () => {
     expect(itemsFor({ type: "contact" }, ctx()).map((i) => i.command)).toEqual(["github", "linkedin", "menu"]);
   });
 
+  it("sections point to the next one", () => {
+    const next = (type) => itemsFor({ type }, ctx())[0].command;
+    expect(next("experience")).toBe("education");
+    expect(next("education")).toBe("stack");
+  });
+
   it("null view has no items", () => {
     expect(itemsFor(null, ctx())).toEqual([]);
   });
@@ -140,6 +149,7 @@ describe("itemsFor / pathFor / complete", () => {
 
   it("completes unique command names only", () => {
     expect(complete("exp")).toBe("experience");
+    expect(complete("edu")).toBe("education");
     expect(complete("pro")).toBe("projects");
     expect(complete("c")).toBe(null);
     expect(complete("")).toBe(null);

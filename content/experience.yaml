@@ -1,4 +1,5 @@
 # Newest first. kind: work | education | milestone.
+# 'experience' shows work entries; 'education' shows education and milestone entries.
 # period, title and kind are required; org, summary and tags are optional.
 
 - period: 2025 - now

@@ -10,7 +10,7 @@ All content lives in `content/`. Nothing in `src/` needs to change.
 | What | Where |
 | --- | --- |
 | Name, headline, bio, links, skills | `content/profile.yaml` |
-| Jobs, education, milestones | `content/experience.yaml` (newest first) |
+| Jobs, education, milestones | `content/experience.yaml` (newest first; `kind: work` shows under experience, `education` and `milestone` under education) |
 | Projects | `content/projects/<slug>.md`, one file per project |
 | Project screenshots | `public/assets/` |
 
@@ -52,7 +52,7 @@ npm run deploy   # build and publish to GitHub Pages
 The page is a terminal. Use the arrow keys (or `j` / `k`), Enter, number keys and Esc,
 tap options on mobile, or type commands at the prompt:
 
-`help`, `about`, `projects`, `open <n|name>`, `repo`, `demo`, `experience`, `stack`,
+`help`, `about`, `projects`, `open <n|name>`, `repo`, `demo`, `experience`, `education`, `stack`,
 `contact`, `theme [green|amber|light]`, `back`, `clear`.
 
 The theme button in the title bar cycles green, amber and light.

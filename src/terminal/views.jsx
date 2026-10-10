@@ -8,6 +8,7 @@ const HELP = [
   ["repo [n|name]", "open a project on GitHub"],
   ["demo [n|name]", "open a project's live site"],
   ["experience", "where I've worked"],
+  ["education", "where I've studied"],
   ["stack", "tools I use"],
   ["contact", "where to find me"],
   ["theme [name]", "green, amber or light"],
@@ -129,10 +130,12 @@ function Project({ project }) {
   );
 }
 
-function Experience({ experience }) {
+// Experience shows jobs; education shows studies and milestones. Both come from content/experience.yaml.
+function Timeline({ entries }) {
+  if (entries.length === 0) return <p className="text-dim">Nothing here yet.</p>;
   return (
     <ol className="space-y-4">
-      {experience.map((item) => (
+      {entries.map((item) => (
         <li key={`${item.period}-${item.title}`} className="grid gap-x-4 md:grid-cols-[14ch_1fr]">
           <span className="text-dim">{item.period}</span>
           <div>
@@ -207,7 +210,9 @@ export function View({ view, content }) {
     case "project":
       return <Project project={projects.find((p) => p.slug === view.slug)} />;
     case "experience":
-      return <Experience experience={experience} />;
+      return <Timeline entries={experience.filter((e) => e.kind === "work")} />;
+    case "education":
+      return <Timeline entries={experience.filter((e) => e.kind !== "work")} />;
     case "stack":
       return <Stack skills={profile.skills} />;
     case "contact":

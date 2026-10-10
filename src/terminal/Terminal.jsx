@@ -57,13 +57,15 @@ export default function Terminal() {
 
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
-  const lastEntryRef = useRef(null);
+  const freshRef = useRef(null);
 
   const locationIndex = findLocation(entries);
   const location = locationIndex >= 0 ? entries[locationIndex].view : null;
   const ctx = { projects, links: profile.links, theme, view: location };
   const items = itemsFor(location, ctx);
   const path = pathFor(location);
+  // Entries from the current location onward are "fresh"; everything before is faded history.
+  const freshStart = locationIndex >= 0 ? locationIndex : Math.max(entries.length - 1, 0);
 
   const exec = useCallback(
     (input) => {
@@ -103,13 +105,12 @@ export default function Terminal() {
     return () => clearTimeout(timer);
   }, [booting, bootCount, finishBoot]);
 
-  // Keep the newest output in view: stick to the bottom, unless it is taller than the screen.
+  // Start the newest output at the top of the screen; older output stays above, faded.
   useEffect(() => {
     const scroller = scrollRef.current;
-    const last = lastEntryRef.current;
-    if (!scroller) return;
-    if (last && last.offsetHeight > scroller.clientHeight - 24) scroller.scrollTop = last.offsetTop - 12;
-    else scroller.scrollTop = scroller.scrollHeight;
+    const fresh = freshRef.current;
+    if (!scroller || !fresh) return;
+    scroller.scrollTop = fresh.offsetTop - parseFloat(getComputedStyle(scroller).paddingTop);
   }, [entries, bootCount]);
 
   // Keep the highlighted option visible while moving through a long list.
@@ -169,43 +170,33 @@ export default function Terminal() {
           aria-label="Terminal output"
           className="relative flex-1 overflow-y-auto overscroll-contain px-4 py-4 text-[13.5px] leading-6 md:px-6 md:text-sm"
         >
-          {bootCount > 0 && (
-            <div className="mb-4 text-dim">
-              {BOOT_LINES.slice(0, bootCount).map((line) => (
-                <p key={line}>
-                  [ <span className="text-fg">ok</span> ] {line}
-                </p>
+          {freshStart > 0 && (
+            <div className="opacity-40 transition-opacity duration-300 hover:opacity-75">
+              <BootLines count={bootCount} />
+              {entries.slice(0, freshStart).map((entry) => (
+                <Entry key={entry.id} entry={entry} ctx={ctx} active={active} interactive={false} onRun={exec} />
               ))}
             </div>
           )}
 
-          {entries.map((entry, i) => (
-            <section
-              key={entry.id}
-              ref={i === entries.length - 1 ? lastEntryRef : undefined}
-              className="entry-in mb-6 last:mb-2"
-            >
-              <p className="break-words">
-                <PromptLabel path={entry.path} />
-                {entry.input}
-              </p>
-              {entry.view && (
-                <>
-                  <div className="mt-2">
-                    <View view={entry.view} content={content} />
-                  </div>
-                  <Options
-                    items={itemsFor(entry.view, ctx)}
-                    active={active}
-                    interactive={i === locationIndex}
-                    onRun={exec}
-                  />
-                </>
-              )}
-            </section>
-          ))}
-
-          {!booting && entries.length > 0 && <KeyHint hasOptions={items.length > 0} />}
+          <div ref={freshRef} className="min-h-full">
+            {freshStart > 0 ? (
+              <hr aria-hidden="true" className="mb-5 border-0 border-t border-dashed border-line" />
+            ) : (
+              <BootLines count={bootCount} />
+            )}
+            {entries.slice(freshStart).map((entry, i) => (
+              <Entry
+                key={entry.id}
+                entry={entry}
+                ctx={ctx}
+                active={active}
+                interactive={freshStart + i === locationIndex}
+                onRun={exec}
+              />
+            ))}
+            {!booting && entries.length > 0 && <KeyHint hasOptions={items.length > 0} />}
+          </div>
         </main>
 
         <nav aria-label="Shortcuts" className="flex gap-2 overflow-x-auto border-t border-line px-4 py-2 md:hidden">
@@ -224,6 +215,38 @@ export default function Terminal() {
         <Prompt inputRef={inputRef} path={path} history={history} onSubmit={exec} />
       </div>
     </div>
+  );
+}
+
+function BootLines({ count }) {
+  if (count === 0) return null;
+  return (
+    <div className="mb-4 text-dim">
+      {BOOT_LINES.slice(0, count).map((line) => (
+        <p key={line}>
+          [ <span className="text-fg">ok</span> ] {line}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function Entry({ entry, ctx, active, interactive, onRun }) {
+  return (
+    <section className="entry-in mb-6 last:mb-2">
+      <p className="break-words">
+        <PromptLabel path={entry.path} />
+        {entry.input}
+      </p>
+      {entry.view && (
+        <>
+          <div className="mt-2">
+            <View view={entry.view} content={content} />
+          </div>
+          <Options items={itemsFor(entry.view, ctx)} active={active} interactive={interactive} onRun={onRun} />
+        </>
+      )}
+    </section>
   );
 }
 

@@ -1,18 +1,19 @@
 // Pure command interpreter for the terminal UI: text in, scrollback entry + side effects out.
 
 export const THEMES = ["green", "amber", "light"];
-export const SECTIONS = ["about", "projects", "experience", "stack", "contact"];
+export const SECTIONS = ["about", "projects", "experience", "education", "stack", "contact"];
 
 const SECTION_HINTS = {
   about: "who I am",
   projects: "things I've built",
   experience: "where I've worked",
+  education: "where I've studied",
   stack: "tools I use",
   contact: "where to find me",
 };
 
 // Section that "next" points to from each section view.
-const NEXT = { about: "projects", experience: "stack", stack: "contact" };
+const NEXT = { about: "projects", experience: "education", education: "stack", stack: "contact" };
 
 const COMMAND_NAMES = [
   "whoami", "menu", ...SECTIONS, "open", "repo", "demo",
@@ -150,6 +151,7 @@ export function itemsFor(view, ctx) {
     }
     case "about":
     case "experience":
+    case "education":
     case "stack":
       return [{ label: NEXT[view.type], hint: SECTION_HINTS[NEXT[view.type]], command: NEXT[view.type] }, menu];
     case "help":
