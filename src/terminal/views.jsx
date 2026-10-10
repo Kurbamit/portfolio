@@ -1,4 +1,5 @@
 import { assetUrl } from "../lib/assets";
+import { introLines } from "./intro";
 
 const HELP = [
   ["whoami", "intro and main menu"],
@@ -24,7 +25,7 @@ const KEYS = [
   ["/", "type a command"],
 ];
 
-export function Options({ items, active, interactive, onRun }) {
+export function Options({ items, active, interactive, onRun, reveal = false }) {
   if (items.length === 0) return null;
   const labelWidth = Math.max(...items.map((i) => i.label.length)) + 2;
 
@@ -33,7 +34,7 @@ export function Options({ items, active, interactive, onRun }) {
       {items.map((item, i) => {
         const on = interactive && i === active;
         return (
-          <li key={item.command}>
+          <li key={item.command} className={reveal ? "opt-in" : undefined} style={reveal ? { "--n": i } : undefined}>
             <button
               type="button"
               onClick={(e) => {
@@ -61,19 +62,36 @@ export function Options({ items, active, interactive, onRun }) {
   );
 }
 
-function Intro({ profile }) {
+// typedChars: how much of the intro has been typed so far (null = all of it).
+function Intro({ profile, typedChars = null }) {
+  const lines = introLines(profile);
+  // Offset of each line in the typed text (lines are joined with a line break).
+  const offsets = lines.map((_, i) => lines.slice(0, i).reduce((n, l) => n + l.text.length + 1, 0));
   return (
     <div className="space-y-1">
-      <p className="text-2xl font-semibold tracking-tight md:text-3xl">{profile.name}</p>
-      <p className="text-dim">
-        {profile.role}
-        {profile.location && `, ${profile.location}`}
-      </p>
-      <p className="pt-3">
-        {profile.headline} {profile.headlineAccent}
-      </p>
-      <p className="max-w-[70ch] text-dim">{profile.tagline}</p>
-      <p className="pt-3 text-dim">Pick a section below, or type &apos;help&apos;.</p>
+      {lines.map((line, i) => {
+        const lineStart = offsets[i];
+        if (typedChars === null) {
+          return (
+            <p key={i} className={line.className}>
+              {line.text}
+            </p>
+          );
+        }
+        if (typedChars < lineStart) return null;
+        const shown = line.text.slice(0, typedChars - lineStart);
+        const current = typedChars <= lineStart + line.text.length;
+        return (
+          <p key={i} className={line.className}>
+            {shown}
+            {current && (
+              <span aria-hidden="true" className="cursor">
+                █
+              </span>
+            )}
+          </p>
+        );
+      })}
     </div>
   );
 }
@@ -198,11 +216,11 @@ function Help() {
   );
 }
 
-export function View({ view, content }) {
+export function View({ view, content, typedChars = null }) {
   const { profile, experience, projects } = content;
   switch (view.type) {
     case "intro":
-      return <Intro profile={profile} />;
+      return <Intro profile={profile} typedChars={typedChars} />;
     case "about":
       return <About profile={profile} />;
     case "projects":

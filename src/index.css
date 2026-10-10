@@ -113,9 +113,16 @@
   animation: line-in 160ms ease-out both;
 }
 
+/* Menu options fade in one after another at the end of the opening animation. */
+.opt-in {
+  animation: line-in 240ms ease-out both;
+  animation-delay: calc(var(--n, 0) * 70ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cursor,
-  .entry-in {
+  .entry-in,
+  .opt-in {
     animation: none;
   }
 }

@@ -3,29 +3,35 @@ import { profile, experience, projects } from "../content";
 import { useTheme } from "../lib/theme";
 import { run, itemsFor, pathFor } from "./commands";
 import { View, Options } from "./views";
+import { introLines } from "./intro";
 import Prompt, { PromptLabel } from "./Prompt";
 import TitleBar from "./TitleBar";
 
 const content = { profile, experience, projects };
-const BOOT_LINES = ["mounted /content", `loaded ${projects.length} projects`, "shell ready"];
+const BOOT_LINES = ["mounted /content", `loaded ${projects.length} projects`, "shell ready"].map((l) => `[ ok ] ${l}`);
+
+// Opening animation: boot lines type fast, the command types slowly, then the intro types out.
+const TYPED = {
+  boot: BOOT_LINES.join("\n"),
+  cmd: "whoami",
+  intro: introLines(profile)
+    .map((l) => l.text)
+    .join("\n"),
+};
+const CHAR_DELAY = { boot: 9, cmd: 120, intro: 6 };
+const NEWLINE_DELAY = { boot: 140, cmd: 0, intro: 50 };
+const PHASE_PAUSE = { boot: 350, cmd: 200, intro: 100 };
 const SHORTCUTS = ["help", "projects", "contact", "theme", "clear"];
 
 let nextId = 0;
 
-function shouldBoot() {
+function shouldAnimate() {
   try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-    return !sessionStorage.getItem("booted");
+    // Background tabs throttle timers to ~1s, which would make the typing crawl.
+    if (document.visibilityState !== "visible") return false;
+    return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch {
     return false;
-  }
-}
-
-function markBooted() {
-  try {
-    sessionStorage.setItem("booted", "1");
-  } catch {
-    // Storage unavailable; the boot just plays again next visit.
   }
 }
 
@@ -45,10 +51,12 @@ function openUrl(url) {
 
 export default function Terminal() {
   const [theme, setTheme] = useTheme();
-  const [booting, setBooting] = useState(shouldBoot);
-  const [bootCount, setBootCount] = useState(() => (booting ? 0 : BOOT_LINES.length));
+  // { phase: "boot" | "cmd" | "intro", chars } while the opening animation runs, otherwise null.
+  const [typing, setTyping] = useState(() => (shouldAnimate() ? { phase: "boot", chars: 0 } : null));
+  const [showBoot, setShowBoot] = useState(true);
+  const [revealId, setRevealId] = useState(null);
   const [entries, setEntries] = useState(() => {
-    if (booting) return [];
+    if (typing) return [];
     const { entry } = run("whoami", { projects, links: profile.links, theme, view: null });
     return [{ ...entry, id: nextId++, path: "~" }];
   });
@@ -81,7 +89,7 @@ export default function Terminal() {
         const base = cleared ? [] : list;
         return next ? [...base, next] : base;
       });
-      if (cleared) setBootCount(0);
+      if (cleared) setShowBoot(false);
       if (entry?.view && entry.view.type !== "text") setActive(0);
       const trimmed = input.trim();
       if (trimmed) setHistory((h) => (h[h.length - 1] === trimmed ? h : [...h, trimmed]));
@@ -89,21 +97,45 @@ export default function Terminal() {
     [location, theme, setTheme]
   );
 
-  const finishBoot = useCallback(() => {
-    if (!booting) return;
-    markBooted();
-    setBooting(false);
-    setBootCount(BOOT_LINES.length);
+  // Runs whoami at the end of the typed command and returns the new entry's id.
+  const runIntro = useCallback(() => {
     exec("whoami");
-  }, [booting, exec]);
+    setRevealId(nextId - 1);
+  }, [exec]);
 
-  // Boot sequence: one line every 130ms, then run whoami.
+  const skipTyping = useCallback(() => {
+    if (!typing) return;
+    if (typing.phase !== "intro") runIntro();
+    setTyping(null);
+  }, [typing, runIntro]);
+
+  // If the tab is hidden mid-animation, jump to the end instead of crawling.
   useEffect(() => {
-    if (!booting) return;
-    const done = bootCount >= BOOT_LINES.length;
-    const timer = setTimeout(done ? finishBoot : () => setBootCount((c) => c + 1), done ? 220 : 130);
+    if (!typing) return;
+    const onVisibility = () => document.visibilityState === "hidden" && skipTyping();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [typing, skipTyping]);
+
+  useEffect(() => {
+    if (!typing) return;
+    const { phase, chars } = typing;
+    const text = TYPED[phase];
+    let timer;
+    if (chars < text.length) {
+      const delay = text[chars] === "\n" ? NEWLINE_DELAY[phase] : CHAR_DELAY[phase];
+      timer = setTimeout(() => setTyping((t) => t && { ...t, chars: t.chars + 1 }), delay);
+    } else {
+      timer = setTimeout(() => {
+        if (phase === "boot") setTyping({ phase: "cmd", chars: 0 });
+        else if (phase === "cmd") {
+          runIntro();
+          setTyping({ phase: "intro", chars: 0 });
+        } else setTyping(null);
+      }, PHASE_PAUSE[phase]);
+    }
     return () => clearTimeout(timer);
-  }, [booting, bootCount, finishBoot]);
+  }, [typing, runIntro]);
 
   // Start the newest output at the top of the screen; older output stays above, faded.
   useEffect(() => {
@@ -111,7 +143,7 @@ export default function Terminal() {
     const fresh = freshRef.current;
     if (!scroller || !fresh) return;
     scroller.scrollTop = fresh.offsetTop - parseFloat(getComputedStyle(scroller).paddingTop);
-  }, [entries, bootCount]);
+  }, [entries, typing, showBoot]);
 
   // Keep the highlighted option visible while moving through a long list.
   useEffect(() => {
@@ -120,8 +152,8 @@ export default function Terminal() {
 
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (booting) {
-        finishBoot();
+      if (typing) {
+        skipTyping();
         return;
       }
       if (e.metaKey || e.ctrlKey || e.altKey || e.target === inputRef.current) return;
@@ -156,10 +188,10 @@ export default function Terminal() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [booting, finishBoot, items, active, exec, location]);
+  }, [typing, skipTyping, items, active, exec, location]);
 
   return (
-    <div className="flex h-[100dvh] md:items-center md:justify-center md:p-8" onPointerDown={booting ? finishBoot : undefined}>
+    <div className="flex h-[100dvh] md:items-center md:justify-center md:p-8" onPointerDown={typing ? skipTyping : undefined}>
       <div className="scanlines glow relative flex h-full w-full flex-col overflow-hidden bg-bg md:h-[min(54rem,calc(100dvh-4rem))] md:max-w-5xl md:rounded-md md:border md:border-line md:shadow-[0_30px_80px_rgb(0_0_0/0.45)]">
         <TitleBar path={path} theme={theme} onTheme={() => exec("theme")} />
 
@@ -172,7 +204,7 @@ export default function Terminal() {
         >
           {freshStart > 0 && (
             <div className="opacity-40 transition-opacity duration-300 hover:opacity-75">
-              <BootLines count={bootCount} />
+              {showBoot && <BootLines />}
               {entries.slice(0, freshStart).map((entry) => (
                 <Entry key={entry.id} entry={entry} ctx={ctx} active={active} interactive={false} onRun={exec} />
               ))}
@@ -183,7 +215,14 @@ export default function Terminal() {
             {freshStart > 0 ? (
               <hr aria-hidden="true" className="mb-5 border-0 border-t border-dashed border-line" />
             ) : (
-              <BootLines count={bootCount} />
+              showBoot && <BootLines chars={typing?.phase === "boot" ? typing.chars : null} />
+            )}
+            {typing?.phase === "cmd" && (
+              <p>
+                <PromptLabel path="~" />
+                {TYPED.cmd.slice(0, typing.chars)}
+                <Cursor />
+              </p>
             )}
             {entries.slice(freshStart).map((entry, i) => (
               <Entry
@@ -193,9 +232,11 @@ export default function Terminal() {
                 active={active}
                 interactive={freshStart + i === locationIndex}
                 onRun={exec}
+                typedChars={typing?.phase === "intro" && entry.id === revealId ? typing.chars : null}
+                reveal={entry.id === revealId}
               />
             ))}
-            {!booting && entries.length > 0 && <KeyHint hasOptions={items.length > 0} />}
+            {!typing && entries.length > 0 && <KeyHint hasOptions={items.length > 0} />}
           </div>
         </main>
 
@@ -218,20 +259,33 @@ export default function Terminal() {
   );
 }
 
-function BootLines({ count }) {
-  if (count === 0) return null;
+function Cursor() {
+  return (
+    <span aria-hidden="true" className="cursor">
+      █
+    </span>
+  );
+}
+
+// chars: how much of the boot text has been typed so far (null = all of it).
+function BootLines({ chars = null }) {
+  const lines = chars === null ? BOOT_LINES : TYPED.boot.slice(0, chars).split("\n");
   return (
     <div className="mb-4 text-dim">
-      {BOOT_LINES.slice(0, count).map((line) => (
-        <p key={line}>
-          [ <span className="text-fg">ok</span> ] {line}
+      {lines.map((line, i) => (
+        <p key={i} className="whitespace-pre">
+          {line.slice(0, 2)}
+          <span className="text-fg">{line.slice(2, 4)}</span>
+          {line.slice(4)}
+          {chars !== null && i === lines.length - 1 && <Cursor />}
         </p>
       ))}
     </div>
   );
 }
 
-function Entry({ entry, ctx, active, interactive, onRun }) {
+function Entry({ entry, ctx, active, interactive, onRun, typedChars = null, reveal = false }) {
+  const typing = typedChars !== null;
   return (
     <section className="entry-in mb-6 last:mb-2">
       <p className="break-words">
@@ -241,9 +295,17 @@ function Entry({ entry, ctx, active, interactive, onRun }) {
       {entry.view && (
         <>
           <div className="mt-2">
-            <View view={entry.view} content={content} />
+            <View view={entry.view} content={content} typedChars={typedChars} />
           </div>
-          <Options items={itemsFor(entry.view, ctx)} active={active} interactive={interactive} onRun={onRun} />
+          {!typing && (
+            <Options
+              items={itemsFor(entry.view, ctx)}
+              active={active}
+              interactive={interactive}
+              onRun={onRun}
+              reveal={reveal}
+            />
+          )}
         </>
       )}
     </section>
